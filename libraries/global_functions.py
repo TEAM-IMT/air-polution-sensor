@@ -468,9 +468,10 @@ def compute_ijft (graphs, spectrum) :
 """
 
 def create_joint_heat_kernel (graphs, scales) :
-
-    # TODO
-    return numpy.random.rand(*[graphs[i].N for i in range(len(graphs))])
+    window_kernel = []
+    for i_graph in range(len(graphs)):
+        window_kernel.append(create_heat_kernel(graphs[i_graph], scales[i_graph]))
+    return window_kernel #numpy.random.rand(*[graphs[i].N for i in range(len(graphs))])
     
 #############################################################################################################################
 
@@ -485,9 +486,8 @@ def create_joint_heat_kernel (graphs, scales) :
         * localized_kernel: Localized kernel in the joint graph domain.
 """
 
-def localize_joint_heat_kernel (graphs, kernel, locations) :
-
-    # TODO
-    return numpy.random.rand(*[graphs[i].N for i in range(len(graphs))])
-    
-    
+def localize_joint_heat_kernel (graphs, kernel, locations):
+    window = numpy.zeros([x.N for x in graphs])
+    for t in range(graphs[1].N):
+        window[:,t] = kernel[1].localize(locations[1])[t] * kernel[0].localize(locations[0])
+    return window #numpy.random.rand(*[graphs[i].N for i in range(len(graphs))])
