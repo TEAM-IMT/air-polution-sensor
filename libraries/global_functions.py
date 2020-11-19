@@ -444,7 +444,7 @@ def compute_jft (graphs, signal) :
         * signal: Signal as obtained by IJFT.
 """
 
-def compute_ijft (graphs, spectrum) :
+def compute_ijft(graphs, spectrum) :
     
     # We apply IGFTs in order
     signal = spectrum
@@ -470,7 +470,7 @@ def compute_ijft (graphs, spectrum) :
 def create_joint_heat_kernel (graphs, scales) :
     window_kernel = []
     for i_graph in range(len(graphs)):
-        window_kernel.append(create_heat_kernel(graphs[i_graph], scales[i_graph]))
+        window_kernel.append(pygsp.filters.Heat(graphs[i_graph], scales[i_graph], normalize = False))
     return window_kernel #numpy.random.rand(*[graphs[i].N for i in range(len(graphs))])
     
 #############################################################################################################################
@@ -488,6 +488,34 @@ def create_joint_heat_kernel (graphs, scales) :
 
 def localize_joint_heat_kernel (graphs, kernel, locations):
     window = numpy.zeros([x.N for x in graphs])
-    for t in range(graphs[1].N):
-        window[:,t] = kernel[1].localize(locations[1])[t] * kernel[0].localize(locations[0])
+    window = numpy.array(1)
+    for t in range(len(graphs)):
+        window = window*kernel[t].localize(locations[t])
+        if t < len(graphs) - 1:
+            window = numpy.expand_dims(window, axis = -1) #  Expand dimension
+    norm = numpy.linalg.norm(window)
+    if numpy.abs(norm) > 1e-6: window /= norm
     return window #numpy.random.rand(*[graphs[i].N for i in range(len(graphs))])
+
+#############################################################################################################################
+
+"""
+    Computes the spectrogram of a multi-graph signal using a given kernel to generate the window and JFT.
+    --
+    In:
+        * graphs: PyGSP graphs in a list, in order.
+        * signal: Signal to analyze.
+        * window_kernels: PyGSP Kernel to define the window in a list, in order.
+    Out:
+        * spectrogram: Spectrogram matrix.
+"""
+
+def compute_joint_graph_spectrogram(graphs, signal, window_kernels):
+    # We localize the window everywhere and report the frequencies
+    spectrogram = numpy.zeros((graphs[0].N, graphs[1].N, graphs[0].N, graphs[1].N))
+    for i in range(graphs[0].N) :
+        for j in range(graphs[1].N):
+            window = localize_joint_heat_kernel(graphs, window_kernels, [i,j])
+            windowed_signal = window * signal
+            spectrogram[:, :, i, j] = compute_jft(graphs, windowed_signal)**2
+    return spectrogram
