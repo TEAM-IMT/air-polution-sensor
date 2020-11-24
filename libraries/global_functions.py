@@ -13,6 +13,7 @@ import collections.abc as abc
 import cProfile
 import pyprof2calltree
 import scipy.signal
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 #############################################################################################################################
 ###################################################### Utlity functions #####################################################
@@ -180,20 +181,18 @@ def plot_stem (values, xticks="", ylabel="", title="", file_name=None) :
         * title: Figure title.
         * colorbar: Set to True to plot a colorbar.
         * round_values: Set to >= 0 to plot values in matrix cells.
+        * limits: colorbar limits (by default [min, max])
         * file_name: Where to save the results.
     Out:
         * None.
 """
 
-def plot_matrix (matrix, rows_labels="", cols_labels="", rows_title="", cols_title="", title="", colorbar=False, round_values=None, file_name=None) :
+def plot_matrix (matrix, rows_labels="", cols_labels="", rows_title="", cols_title="", title="", colorbar=False, round_values=None, limits = None, file_name=None) :
 
     # Plot matrix
     figure, axis = pyplot.subplots(figsize=(20, 20))
-    cax = axis.matshow(matrix)
-    
-    # Add colorbar
-    if colorbar :
-        pyplot.colorbar(cax)
+    if limits is None: cax = axis.matshow(matrix)
+    else: cax = axis.matshow(matrix, vmin = limits[0], vmax = limits[1])
     
     # Add values
     if round_values is not None :
@@ -213,6 +212,12 @@ def plot_matrix (matrix, rows_labels="", cols_labels="", rows_title="", cols_tit
     pyplot.xlabel(cols_title)
     pyplot.gca().set_xticklabels(cols_labels)
     pyplot.tight_layout()
+    
+    # Add colorbar
+    if colorbar:
+        divider = make_axes_locatable(axis).append_axes("right", size="5%", pad=0.1)
+        pyplot.colorbar(cax, cax = divider)
+    
     pyplot.show()
     
     # Save
@@ -229,19 +234,22 @@ def plot_matrix (matrix, rows_labels="", cols_labels="", rows_title="", cols_tit
         * graph: Graph to plot.
         * signal: Signal to plot on vertices.
         * title: Figure title.
+        * limits: colorbar limits (by default [min, max])
         * file_name: Where to save the results.
     Out:
         * None.
 """
 
-def plot_graph (graph, signal=None, title="", file_name=None) :
+def plot_graph (graph, signal=None, title="", file_name=None, limits = None) :
     
     # With or without signal
     figure = pyplot.figure(figsize=(20, 10))
-    if signal is None :
-        graph.plot(ax=figure.gca())
+    if signal is None:
+        if limits is None: graph.plot(ax=figure.gca())
+        else: graph.plot(ax=figure.gca(), limits = limits)
     else :
-        graph.plot_signal(signal, ax=figure.gca())
+        if limits is None: graph.plot_signal(signal, ax=figure.gca())
+        else: graph.plot_signal(signal, ax=figure.gca(), limits = limits)
     
     # Plot
     pyplot.title(title)
@@ -347,6 +355,26 @@ def create_path_graph (graph_order) :
     
     # PyGSP function
     graph = pygsp.graphs.Path(graph_order)
+    graph.compute_fourier_basis()
+    return graph
+
+#############################################################################################################################
+
+"""
+    Creates a stochastic graph.
+    --
+    In:
+        * *args: StochasticBlockModel positional arguments
+        * **kwargs: StochasticBlockModel arguments.
+    Out:
+        * graph: A PyGSP stochastic graph.
+"""
+
+def create_stochastic_graph(*args, **kwargs):
+    
+    # PyGSP function
+    graph = pygsp.graphs.StochasticBlockModel(*args, **kwargs)
+    graph.set_coordinates(kind="spring", seed=numpy.random.randint(2**32))
     graph.compute_fourier_basis()
     return graph
 
@@ -467,10 +495,10 @@ def compute_ijft(graphs, spectrum) :
         * kernel: PyGSP heat kernel.
 """
 
-def create_joint_heat_kernel (graphs, scales) :
+def create_joint_heat_kernel (graphs, scales, normalize = False) :
     window_kernel = []
     for i_graph in range(len(graphs)):
-        window_kernel.append(pygsp.filters.Heat(graphs[i_graph], scales[i_graph], normalize = False))
+        window_kernel.append(pygsp.filters.Heat(graphs[i_graph], scales[i_graph], normalize = normalize))
     return window_kernel #numpy.random.rand(*[graphs[i].N for i in range(len(graphs))])
     
 #############################################################################################################################
@@ -486,7 +514,7 @@ def create_joint_heat_kernel (graphs, scales) :
         * localized_kernel: Localized kernel in the joint graph domain.
 """
 
-def localize_joint_heat_kernel (graphs, kernel, locations):
+def localize_joint_heat_kernel (graphs, kernel, locations, normalize = False):
     window = numpy.zeros([x.N for x in graphs])
     window = numpy.array(1)
     for t in range(len(graphs)):
@@ -494,7 +522,7 @@ def localize_joint_heat_kernel (graphs, kernel, locations):
         if t < len(graphs) - 1:
             window = numpy.expand_dims(window, axis = -1) #  Expand dimension
     norm = numpy.linalg.norm(window)
-    if numpy.abs(norm) > 1e-6: window /= norm
+    if numpy.abs(norm) > 1e-6 and normalize: window /= norm
     return window #numpy.random.rand(*[graphs[i].N for i in range(len(graphs))])
 
 #############################################################################################################################
@@ -515,7 +543,7 @@ def compute_joint_graph_spectrogram(graphs, signal, window_kernels):
     spectrogram = numpy.zeros((graphs[0].N, graphs[1].N, graphs[0].N, graphs[1].N))
     for i in range(graphs[0].N) :
         for j in range(graphs[1].N):
-            window = localize_joint_heat_kernel(graphs, window_kernels, [i,j])
+            window = localize_joint_heat_kernel(graphs, window_kernels, [i,j], normalize = False)
             windowed_signal = window * signal
             spectrogram[:, :, i, j] = compute_jft(graphs, windowed_signal)**2
     return spectrogram
