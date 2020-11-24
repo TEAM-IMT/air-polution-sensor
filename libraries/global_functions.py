@@ -14,6 +14,8 @@ import cProfile
 import pyprof2calltree
 import scipy.signal
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+matplotlib.rcParams.update({'font.size': 14.0, 'figure.titlesize':18.0, 'axes.labelsize':16.0, 'xtick.labelsize': 14.0,
+                            'ytick.labelsize': 14.0, 'axes.titlesize':18.0})
 
 #############################################################################################################################
 ###################################################### Utlity functions #####################################################
