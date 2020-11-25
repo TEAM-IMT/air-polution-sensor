@@ -320,7 +320,7 @@ def plot_distribution (values, min_x=None, max_x=None, nb_bins=100, xlabel="", f
 def create_graph (W) :
     
     # PyGSP function
-    graph = graphs.Graph(W)
+    graph = pygsp.graphs.Graph(W)
     graph.compute_fourier_basis()
     graph.set_coordinates()
     return graph
@@ -516,7 +516,7 @@ def compute_ijft(graphs, spectrum) :
         * kernel: PyGSP heat kernel.
 """
 
-def create_joint_heat_kernel (graphs, scales, normalize = False) :
+def create_joint_heat_kernel (graphs, scales, normalize = True) :
     window_kernel = []
     for i_graph in range(len(graphs)):
         window_kernel.append(pygsp.filters.Heat(graphs[i_graph], scales[i_graph], normalize = normalize))
@@ -559,7 +559,7 @@ def localize_joint_heat_kernel (graphs, kernel, locations, normalize = False):
         * spectrogram: Spectrogram matrix.
 """
 
-def compute_joint_graph_spectrogram(graphs, signal, window_kernels):
+def compute_joint_graph_spectrogram(graphs, signal, window_kernels, normalize = False):
     # We localize the window everywhere and report the frequencies
     spectrogram = numpy.zeros((graphs[0].N, graphs[1].N, graphs[0].N, graphs[1].N))
     for i in range(graphs[0].N) :
@@ -567,6 +567,8 @@ def compute_joint_graph_spectrogram(graphs, signal, window_kernels):
             window = localize_joint_heat_kernel(graphs, window_kernels, [i,j], normalize = False)
             windowed_signal = window * signal
             spectrogram[:, :, i, j] = compute_jft(graphs, windowed_signal)**2
+    norm = numpy.linalg.norm(spectrogram)
+    if numpy.abs(norm) > 1e-6 and normalize: spectrogram /= norm
     return spectrogram
 
 #############################################################################################################################
@@ -583,8 +585,8 @@ def compute_joint_graph_spectrogram(graphs, signal, window_kernels):
 """
 
 def Norm_W(W,Theta,k):
-    W_normal = numpy.exp(-W**2/(2*(0.1**2)))
+    W_normal = numpy.exp(-(W**2/(2*Theta**2)))
     W_normal = W_normal.replace([1],0)
-    column=W_normal.columns.to_list()
-    W_normal[column] = W_normal[column].where(~(W_normal[column]>k),other=0)
+    column = W_normal.columns.to_list()
+    W_normal[column] = W_normal[column].where(~(W[column]>k),other=0)
     return W_normal

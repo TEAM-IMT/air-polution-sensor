@@ -1,5 +1,7 @@
 __pycache__
 .ipynb_checkpoints
+.vscode
+
 data/origin_data
 data/super_df.csv
-.vscode
+data/data.zip
