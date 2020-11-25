@@ -549,3 +549,26 @@ def compute_joint_graph_spectrogram(graphs, signal, window_kernels):
             windowed_signal = window * signal
             spectrogram[:, :, i, j] = compute_jft(graphs, windowed_signal)**2
     return spectrogram
+
+#############################################################################################################################
+
+"""
+    Computes the normalization with the thresholded Gaussian kernel weighting function
+    --
+    In:
+        * W: graph to be normalized
+        * theta: magnitud 
+        * k: threshold
+    Out:
+        * W_normal: Matrix normalized
+"""
+
+def Norm_W(W,Theta,k):
+
+
+ 
+  W_normal=numpy.exp(- (numpy.sqrt(W)/2*(numpy.sqrt(Theta))))
+  numpy.fill_diagonal(W_normal.values, 0)
+  column=W_normal.columns.to_list()
+  W_normal[column] = W_normal[column].where(~(W_normal[column]>k),other=0)
+  return W_normal
