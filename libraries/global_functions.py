@@ -17,6 +17,8 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 matplotlib.rcParams.update({'font.size': 14.0, 'figure.titlesize':18.0, 'axes.labelsize':16.0, 'xtick.labelsize': 14.0,
                             'ytick.labelsize': 14.0, 'axes.titlesize':18.0})
 
+import math
+
 #############################################################################################################################
 ###################################################### Utlity functions #####################################################
 #############################################################################################################################
@@ -565,10 +567,8 @@ def compute_joint_graph_spectrogram(graphs, signal, window_kernels):
 
 def Norm_W(W,Theta,k):
 
-
- 
-  W_normal=numpy.exp(- (numpy.sqrt(W)/2*(numpy.sqrt(Theta))))
-  numpy.fill_diagonal(W_normal.values, 0)
+  W_normal=numpy.exp(- (numpy.power(W,2)/2*(math.pow(Theta,2))))
+  W_normal = W_normal.replace([1],0)
   column=W_normal.columns.to_list()
   W_normal[column] = W_normal[column].where(~(W_normal[column]>k),other=0)
   return W_normal
