@@ -17,8 +17,6 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 matplotlib.rcParams.update({'font.size': 14.0, 'figure.titlesize':18.0, 'axes.labelsize':16.0, 'xtick.labelsize': 14.0,
                             'ytick.labelsize': 14.0, 'axes.titlesize':18.0})
 
-import math
-
 #############################################################################################################################
 ###################################################### Utlity functions #####################################################
 #############################################################################################################################
@@ -311,6 +309,25 @@ def plot_distribution (values, min_x=None, max_x=None, nb_bins=100, xlabel="", f
 #############################################################################################################################
 
 """
+    Creates a graph with weight matrix.
+    --
+    In:
+        * W: weight matrix.
+    Out:
+        * graph: A PyGSP sensor graph.
+"""
+
+def create_graph (W) :
+    
+    # PyGSP function
+    graph = graphs.Graph(W)
+    graph.compute_fourier_basis()
+    graph.set_coordinates()
+    return graph
+    
+#############################################################################################################################
+
+"""
     Creates a sensor graph.
     --
     In:
@@ -566,9 +583,8 @@ def compute_joint_graph_spectrogram(graphs, signal, window_kernels):
 """
 
 def Norm_W(W,Theta,k):
-
-  W_normal=numpy.exp(- (numpy.power(W,2)/2*(math.pow(Theta,2))))
-  W_normal = W_normal.replace([1],0)
-  column=W_normal.columns.to_list()
-  W_normal[column] = W_normal[column].where(~(W_normal[column]>k),other=0)
-  return W_normal
+    W_normal = numpy.exp(-W**2/(2*(0.1**2)))
+    W_normal = W_normal.replace([1],0)
+    column=W_normal.columns.to_list()
+    W_normal[column] = W_normal[column].where(~(W_normal[column]>k),other=0)
+    return W_normal
