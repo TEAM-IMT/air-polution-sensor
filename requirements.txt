@@ -1,3 +1,4 @@
 scipy
 pygsp
 pyprof2calltree
+pygraphviz
