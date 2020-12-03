@@ -242,16 +242,16 @@ def plot_matrix (matrix, rows_labels="", cols_labels="", rows_title="", cols_tit
         * None.
 """
 
-def plot_graph (graph, signal=None, title="", file_name=None, limits = None) :
+def plot_graph (graph, signal=None, title="", file_name=None, limits = None, **kwargs) :
     
     # With or without signal
     figure = pyplot.figure(figsize=(20, 10))
     if signal is None:
-        if limits is None: graph.plot(ax=figure.gca())
-        else: graph.plot(ax=figure.gca(), limits = limits)
+        if limits is None: graph.plot(ax=figure.gca(), **kwargs)
+        else: graph.plot(ax=figure.gca(), limits = limits, **kwargs)
     else :
-        if limits is None: graph.plot_signal(signal, ax=figure.gca())
-        else: graph.plot_signal(signal, ax=figure.gca(), limits = limits)
+        if limits is None: graph.plot_signal(signal, ax=figure.gca(), **kwargs)
+        else: graph.plot_signal(signal, ax=figure.gca(), limits = limits, **kwargs)
     
     # Plot
     pyplot.title(title)
