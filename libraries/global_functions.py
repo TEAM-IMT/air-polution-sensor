@@ -251,7 +251,8 @@ def plot_graph (graph, signal=None, title="", file_name=None, limits = None, **k
         else: graph.plot(ax=figure.gca(), limits = limits, **kwargs)
     else :
         if limits is None: graph.plot_signal(signal, ax=figure.gca(), **kwargs)
-        else: graph.plot_signal(signal, ax=figure.gca(), limits = limits, **kwargs)
+        else: 
+            graph.plot_signal(signal, ax=figure.gca(), limits = limits, **kwargs)
     
     # Plot
     pyplot.title(title)
@@ -536,7 +537,6 @@ def create_joint_heat_kernel (graphs, scales, normalize = True) :
 """
 
 def localize_joint_heat_kernel (graphs, kernel, locations, normalize = False):
-    window = numpy.zeros([x.N for x in graphs])
     window = numpy.array(1)
     for t in range(len(graphs)):
         window = window*kernel[t].localize(locations[t])
