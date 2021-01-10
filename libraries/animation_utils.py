@@ -111,10 +111,11 @@ Out:
     * Interactif ipywidgets
 """
 def spectogram_anima(graph, signal, kernel = None, SKS = 30, is_graph_space = False, **kwargs):
-    def update(value, autoadj = False):
+    def update(value, autoadj = False, interpolate = True):
         nonlocal kwargs
         kwargs_save = copy.deepcopy(kwargs)
         if autoadj: kwargs["limits"] = None
+        kwargs["interpolate"] = interpolate
         
         # Space-spectogram
         spectrogram = compute_graph_spectrogram(graph, signal[:, value], kernel)
@@ -158,13 +159,14 @@ Out:
     * Interactif ipywidgets
 """
 def JFT_anima(space_time_graph, signal, windows_kernels = None, kernels = None, joint_spectogram = None, **kwargs):
-    def update(instant, vertex, autoadj = False) :
+    def update(instant, vertex, autoadj = False, interpolate = True) :
         nonlocal kwargs
         kwargs_save = copy.deepcopy(kwargs)
         
         if autoadj: kwargs["limits"] = None
         elif "limits" not in kwargs.keys(): 
             kwargs["limits"] = [numpy.min(joint_spectogram), numpy.max(joint_spectogram)]
+        kwargs["interpolate"] = interpolate
         
         plot_matrix(joint_spectogram[:,:, vertex, instant],
                     cols_title="Eigenvalue Time-graph", rows_title="Eigenvalue Vertex-graph", colorbar=True,

@@ -15,7 +15,7 @@ import pyprof2calltree
 import scipy.signal
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 matplotlib.rcParams.update({'font.size': 14.0, 'figure.titlesize':18.0, 'axes.labelsize':16.0, 'xtick.labelsize': 14.0,
-                            'ytick.labelsize': 14.0, 'axes.titlesize':18.0})
+                            'ytick.labelsize': 14.0, 'axes.titlesize':18.0, 'image.cmap':'viridis'})
 
 #############################################################################################################################
 ###################################################### Utlity functions #####################################################
@@ -189,12 +189,14 @@ def plot_stem (values, xticks="", ylabel="", title="", file_name=None) :
         * None.
 """
 
-def plot_matrix (matrix, rows_labels="", cols_labels="", rows_title="", cols_title="", title="", colorbar=False, round_values=None, limits = None, file_name=None) :
+def plot_matrix (matrix, rows_labels="", cols_labels="", rows_title="", cols_title="", title="", colorbar=False, round_values=None, limits = None, interpolate = True, file_name=None) :
 
     # Plot matrix
+    if interpolate: interp = 'hanning'
+    else: interp = None
     figure, axis = pyplot.subplots(figsize=(20, 20))
-    if limits is None: cax = axis.matshow(matrix)
-    else: cax = axis.matshow(matrix, vmin = limits[0], vmax = limits[1])
+    if limits is None: cax = axis.matshow(matrix, interpolation = interp)
+    else: cax = axis.matshow(matrix, vmin = limits[0], vmax = limits[1], interpolation = interp)
     
     # Add values
     if round_values is not None :
@@ -214,6 +216,7 @@ def plot_matrix (matrix, rows_labels="", cols_labels="", rows_title="", cols_tit
     pyplot.xlabel(cols_title)
     pyplot.gca().set_xticklabels(cols_labels)
     pyplot.tight_layout()
+    pyplot.grid(False)
     
     # Add colorbar
     if colorbar:
