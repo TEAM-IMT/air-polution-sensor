@@ -154,10 +154,14 @@ def plot_curve (xs, ys, legend="", xlabel="", ylabel="", title="", file_name=Non
         * None.
 """
 
-def plot_stem (values, xticks="", ylabel="", title="", file_name=None) :
+def plot_stem (values, xticks="", ylabel="", title="", file_name=None, x_lim = None) :
         
     # Plot
     figure = pyplot.figure(figsize=(20, 10))
+
+    if x_lim is not None: 
+        values = values[x_lim[0]:x_lim[1]]
+        
     pyplot.stem(range(len(values)), values, use_line_collection=True)
     pyplot.xticks(range(len(values)), xticks)
     pyplot.ylabel(ylabel)

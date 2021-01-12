@@ -70,12 +70,15 @@ In:
 Out:
     * Interactif ipywidgets
 """
-def gft_signal_anima(graph, signal, is_graph_space = True):
+def gft_signal_anima(graph, signal, is_graph_space = True, x_lim = None, GFT= None):
     def update(value):
-        plot_stem(graph.igft(graph.gft(signal[value])), 
-                xticks = range(graph.N), ylabel = "Signal", title = title1 + str(value))
-        plot_stem(graph.gft(signal[value]), xticks = gft_xticks, ylabel="GFT", 
-                title = title2 + str(value))
+
+        if GFT is None or not GFT :
+            plot_stem(graph.igft(graph.gft(signal[value])), 
+                    xticks = range(graph.N), ylabel = "Signal", title = title1 + str(value))
+        if GFT is None or GFT :
+            plot_stem(graph.gft(signal[value]), xticks = gft_xticks, ylabel="GFT", 
+                    title = title2 + str(value),x_lim=x_lim)
     
     if is_graph_space:
         title1 = "Signal evolution at vertex "
@@ -88,6 +91,9 @@ def gft_signal_anima(graph, signal, is_graph_space = True):
         title2 = "Graph Fourier Transform (GFT) at instance "
         description = "Instant"
         signal = signal.T
+
+    if x_lim is not None:
+        gft_xticks = gft_xticks[x_lim[0]:x_lim[1]]
 
     # value = ipywidgets.IntSlider(min = 0, max = signal.shape[0], step = 1, 
     #         layout = ipywidgets.Layout(width='auto'),
@@ -110,20 +116,26 @@ In:
 Out:
     * Interactif ipywidgets
 """
-def spectogram_anima(graph, signal, kernel = None, SKS = 30, is_graph_space = False, **kwargs):
+def spectogram_anima(graph, signal, kernel = None, SKS = 30, is_graph_space = False,lamdba_lim=None, **kwargs):
     def update(value, autoadj = False, interpolate = True):
-        nonlocal kwargs
+        nonlocal kwargs , rows_labels
         kwargs_save = copy.deepcopy(kwargs)
         if autoadj: kwargs["limits"] = None
         kwargs["interpolate"] = interpolate
-        
+                
+                
         # Space-spectogram
+        
         spectrogram = compute_graph_spectrogram(graph, signal[:, value], kernel)
+        if lamdba_lim is not None :
+            spectrogram = spectrogram[lamdba_lim[0]:lamdba_lim[1]]
+            rows_labels=rows_labels[lamdba_lim[0]:lamdba_lim[1]]
         plot_matrix(spectrogram, cols_title=cols_title, cols_labels=range(graph.N),
                     rows_title="Eigenvalue index", colorbar=True, rows_labels=rows_labels, 
                     title=title + str(value), **kwargs)
         kwargs = kwargs_save
-        
+    
+
     # Slider
     if is_graph_space:
         cols_title = "Vertex"
@@ -158,7 +170,7 @@ In:
 Out:
     * Interactif ipywidgets
 """
-def JFT_anima(space_time_graph, signal, windows_kernels = None, kernels = None, joint_spectogram = None, **kwargs):
+def JFT_anima(space_time_graph, signal, windows_kernels = None, kernels = None, joint_spectogram = None,lspace_lim=None,ltime_lim=None, **kwargs):
     def update(instant, vertex, autoadj = False, interpolate = True) :
         nonlocal kwargs
         kwargs_save = copy.deepcopy(kwargs)
@@ -168,10 +180,20 @@ def JFT_anima(space_time_graph, signal, windows_kernels = None, kernels = None, 
             kwargs["limits"] = [numpy.min(joint_spectogram), numpy.max(joint_spectogram)]
         kwargs["interpolate"] = interpolate
         
-        plot_matrix(joint_spectogram[:,:, vertex, instant],
+        Copia_JointSpectogram = joint_spectogram.copy()
+        cols_labels=["$\lambda^T_{" + str(x) + "}$" for x in range(space_time_graph[1].N)]
+        rows_labels=["$\lambda^G_{" + str(x) + "}$" for x in range(space_time_graph[0].N)]
+
+        if lspace_lim is not None :
+            Copia_JointSpectogram = Copia_JointSpectogram[lspace_lim[0]:lspace_lim[1]]
+            rows_labels = rows_labels[lspace_lim[0]:lspace_lim[1]]
+        if ltime_lim is not None :
+            Copia_JointSpectogram = Copia_JointSpectogram[:,ltime_lim[0]:ltime_lim[1]]
+            cols_labels = cols_labels[ltime_lim[0]:ltime_lim[1]]
+        plot_matrix(Copia_JointSpectogram[:,:, vertex, instant],
                     cols_title="Eigenvalue Time-graph", rows_title="Eigenvalue Vertex-graph", colorbar=True,
-                    cols_labels=["$\lambda^T_{" + str(x) + "}$" for x in range(space_time_graph[1].N)],
-                    rows_labels=["$\lambda^G_{" + str(x) + "}$" for x in range(space_time_graph[0].N)],
+                    cols_labels= cols_labels,
+                    rows_labels= rows_labels ,
                     title="Graph spectrogram of all values observed at time " + 
                     str(instant) + " and vertex " + str(vertex), **kwargs)
         
