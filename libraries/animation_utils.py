@@ -1,7 +1,7 @@
 #############################################################################################################################
 ######################################################## Global stuff #######################################################
 #############################################################################################################################
-import sys, os, ipywidgets, copy
+import sys, os, ipywidgets, copy, datetime, time
 from IPython.display import clear_output
 if __name__ == '__main__': from global_functions import *
 else: from .global_functions import *
@@ -247,6 +247,75 @@ def split_JFT_anima(space_time_graph, time_sensors_series, time_window, time_div
         value = time_div_default, description = 'time_division', disabled=False, style = {"handle_color":"lightblue"},)}
     ipywidgets.widgets.interact(update, **params)
     return kwargs['kernels'], kwargs['joint_spectogram']
+
+#############################################################################################################################
+"""
+Plot norm_matrix, in order to detect drift concept.
+--
+In:
+    * joint_spectogram: 4D tensor with joint spectogram values
+    * sw: space window value
+    * tw: time window value
+Out:
+    * image plot
+"""
+
+def norm_matrix_estimation(joint_spectogram, sw, tw):
+    norm_matrix = numpy.zeros((joint_spectogram.shape[0] - sw,joint_spectogram.shape[1] - tw))
+    for i in range(joint_spectogram.shape[0] - sw):
+        for j in range(joint_spectogram.shape[1] - tw):
+            norm_matrix[i,j] = numpy.linalg.norm(joint_spectogram[:,:,i:i + sw,j:j + tw])
+    return norm_matrix
+
+def plot_norm_matrix(joint_spectogram, sw, tw):
+    norm_matrix = norm_matrix_estimation(joint_spectogram, sw, tw)
+    plot_matrix(norm_matrix, rows_labels = ["$v_{"+str(i)+"}$" for i in range(norm_matrix.shape[0])], 
+                cols_labels = ["$t_{"+str(i)+"}$" for i in range(norm_matrix.shape[1])], 
+                rows_title = "Vertex", cols_title = "Instant", title = "Window spectogram normalization", colorbar = True)
+
+#############################################################################################################################
+"""
+Plot dist_matrix, in order to detect drift concept.
+--
+In:
+    * joint_spectogram: 4D tensor with joint spectogram values
+    * sw: space window value
+    * tw: time window value
+Out:
+    * image plot
+"""
+
+def dist_matrix_estimation(joint_spectogram, sw, tw, filename = None):
+    N = (joint_spectogram.shape[0] - sw)*(joint_spectogram.shape[1] - tw)
+    dist_matrix = numpy.zeros((N,N))
+    i,j,count = 0,0,0
+    if filename is not None and os.path.isfile(filename):
+        return numpy.loadtxt(filename, delimiter = ',')
+    for a_i in range(joint_spectogram.shape[0] - sw):
+        for a_j in range(joint_spectogram.shape[1] - tw):
+            wspectogram_A = joint_spectogram[:,:,a_i:a_i + sw, a_j:a_j + tw]
+            for b_i in range(joint_spectogram.shape[0] - sw):
+                for b_j in range(joint_spectogram.shape[1] - tw):
+                    wspectogram_B = joint_spectogram[:,:,b_i:b_i + sw,b_j:b_j + tw]
+                    dist_matrix[i,j] = numpy.linalg.norm(wspectogram_A - wspectogram_B)
+                    j += 1
+                    if count % 10000 == 0:
+                        print("[INFO] Matrix processing. {}/{}".format(count + 1,N*N))
+                    count += 1
+            i, j = i + 1, 0
+    if filename is not None: numpy.savetxt(filename, dist_matrix, delimiter = ',')
+    return dist_matrix
+
+def plot_dist_matrix(joint_spectogram, sw, tw, filename = None):
+    print("[{}][INFO] Start matrix computation.".format(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")))
+    dist_matrix = dist_matrix_estimation(joint_spectogram, sw, tw, filename = filename)
+    print("[{}][INFO] Start matrix graph.".format(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")))
+    plot_matrix(dist_matrix, rows_labels = ["$p_{"+str(i)+"}$" for i in range(dist_matrix.shape[0])], 
+                # cols_labels = ["$p_{"+str(i)+"}$" for i in range(dist_matrix.shape[1])], 
+                # rows_title = "Pair $(v_1,t_1)$", cols_title = "Pair $(v_2,t_2)$", 
+                title = "Window spectogram Euclidian distance", colorbar = True)
+    print("[{}][INFO] Final matrix computation.".format(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")))
+    return dist_matrix
 
 #############################################################################################################################
 ####################################################### Proof functions #####################################################
