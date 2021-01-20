@@ -1,7 +1,8 @@
 #############################################################################################################################
 ######################################################## Global stuff #######################################################
 #############################################################################################################################
-import sys, os, ipywidgets, copy, datetime, time
+import sys, os, ipywidgets, copy, datetime
+import pandas as pd
 from IPython.display import clear_output
 if __name__ == '__main__': from global_functions import *
 else: from .global_functions import *
@@ -285,35 +286,43 @@ Out:
     * image plot
 """
 
-def dist_matrix_estimation(joint_spectogram, sw, tw, filename = None):
-    N = (joint_spectogram.shape[0] - sw)*(joint_spectogram.shape[1] - tw)
-    dist_matrix = numpy.zeros((N,N))
-    i,j,count = 0,0,0
-    if filename is not None and os.path.isfile(filename):
-        return numpy.loadtxt(filename, delimiter = ',')
+def dist_matrix_estimation(joint_spectogram, sw, tw, filename = None, overwrite = False, cprint = 100000):
+    dist_matrix = pd.DataFrame()
+    count, N = 0, (joint_spectogram.shape[0] - sw)*(joint_spectogram.shape[1] - tw)
+    if filename is not None and os.path.isfile(filename) and not overwrite:
+        return pd.read_csv(filename, index_col = 0)
+        # return numpy.loadtxt(filename, delimiter = ',')
     for a_i in range(joint_spectogram.shape[0] - sw):
         for a_j in range(joint_spectogram.shape[1] - tw):
             wspectogram_A = joint_spectogram[:,:,a_i:a_i + sw, a_j:a_j + tw]
             for b_i in range(joint_spectogram.shape[0] - sw):
                 for b_j in range(joint_spectogram.shape[1] - tw):
                     wspectogram_B = joint_spectogram[:,:,b_i:b_i + sw,b_j:b_j + tw]
-                    dist_matrix[i,j] = numpy.linalg.norm(wspectogram_A - wspectogram_B)
-                    j += 1
-                    if count % 10000 == 0:
-                        print("[INFO] Matrix processing. {}/{}".format(count + 1,N*N))
+                    dist_matrix.loc["({},{})".format(a_i,a_j),"({},{})".format(b_i,b_j)] = numpy.linalg.norm(wspectogram_A - wspectogram_B)
+                    if count % cprint == 0: print("[INFO] Matrix processing. {}/{}".format(count + 1,N*N))
                     count += 1
-            i, j = i + 1, 0
-    if filename is not None: numpy.savetxt(filename, dist_matrix, delimiter = ',')
+    if filename is not None: 
+        # numpy.savetxt(filename, dist_matrix, delimiter = ',')
+        dist_matrix.to_csv(filename)
     return dist_matrix
 
-def plot_dist_matrix(joint_spectogram, sw, tw, filename = None):
+def plot_dist_matrix(joint_spectogram, sw, tw, filename = None, overwrite = False, xlim = None, ylim = None, image_save = None):
     print("[{}][INFO] Start matrix computation.".format(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")))
-    dist_matrix = dist_matrix_estimation(joint_spectogram, sw, tw, filename = filename)
+    dist_matrix = dist_matrix_estimation(joint_spectogram, sw, tw, filename = filename, overwrite = overwrite)
     print("[{}][INFO] Start matrix graph.".format(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")))
-    plot_matrix(dist_matrix, rows_labels = ["$p_{"+str(i)+"}$" for i in range(dist_matrix.shape[0])], 
-                # cols_labels = ["$p_{"+str(i)+"}$" for i in range(dist_matrix.shape[1])], 
-                # rows_title = "Pair $(v_1,t_1)$", cols_title = "Pair $(v_2,t_2)$", 
-                title = "Window spectogram Euclidian distance", colorbar = True)
+    if xlim is None and ylim is None:
+        plot_matrix(dist_matrix.values, #rows_labels = ["$p_{"+str(i)+"}$" for i in range(dist_matrix.shape[0])], 
+            # cols_labels = ["$p_{"+str(i)+"}$" for i in range(dist_matrix.shape[1])], 
+            rows_title = "Pair $(v_1,t_1)$", cols_title = "Pair $(v_2,t_2)$", 
+            title = "Window spectogram Euclidian distance", colorbar = True, file_name = image_save)
+    else:
+        xlabel = "" if xlim is None or (xlim[1] - xlim[0]) > 150 else ["$p_{"+x+"}$" for x in dist_matrix.columns[xlim[0]:xlim[1]]]
+        ylabel = "" if xlim is None or (ylim[1] - ylim[0]) > 150 else ["$p_{"+x+"}$" for x in dist_matrix.index[xlim[0]:xlim[1]]]
+        if xlim is None: xlim = [None, None]
+        if ylim is None: ylim = [None, None]
+        plot_matrix(dist_matrix.iloc[xlim[0]:xlim[1],ylim[0]:ylim[1]].values, rows_labels = xlabel, 
+            cols_labels = ylabel, rows_title = "Pair $(v_1,t_1)$", cols_title = "Pair $(v_2,t_2)$", 
+            title = "Window spectogram Euclidian distance", colorbar = True, file_name = image_save)
     print("[{}][INFO] Final matrix computation.".format(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")))
     return dist_matrix
 
