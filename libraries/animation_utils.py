@@ -306,23 +306,22 @@ def dist_matrix_estimation(joint_spectogram, sw, tw, filename = None, overwrite 
         dist_matrix.to_csv(filename)
     return dist_matrix
 
-def plot_dist_matrix(joint_spectogram, sw, tw, filename = None, overwrite = False, xlim = None, ylim = None, image_save = None):
+def plot_dist_matrix(joint_spectogram, sw, tw, vlist = None, xlim = None, ylim = None, filename = None, overwrite = False, image_save = None):
     print("[{}][INFO] Start matrix computation.".format(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")))
     dist_matrix = dist_matrix_estimation(joint_spectogram, sw, tw, filename = filename, overwrite = overwrite)
     print("[{}][INFO] Start matrix graph.".format(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")))
-    if xlim is None and ylim is None:
-        plot_matrix(dist_matrix.values, #rows_labels = ["$p_{"+str(i)+"}$" for i in range(dist_matrix.shape[0])], 
-            # cols_labels = ["$p_{"+str(i)+"}$" for i in range(dist_matrix.shape[1])], 
-            rows_title = "Pair $(v_1,t_1)$", cols_title = "Pair $(v_2,t_2)$", 
-            title = "Window spectogram Euclidian distance", colorbar = True, file_name = image_save)
-    else:
-        xlabel = "" if xlim is None or (xlim[1] - xlim[0]) > 150 else ["$p_{"+x+"}$" for x in dist_matrix.columns[xlim[0]:xlim[1]]]
-        ylabel = "" if xlim is None or (ylim[1] - ylim[0]) > 150 else ["$p_{"+x+"}$" for x in dist_matrix.index[xlim[0]:xlim[1]]]
-        if xlim is None: xlim = [None, None]
-        if ylim is None: ylim = [None, None]
-        plot_matrix(dist_matrix.iloc[xlim[0]:xlim[1],ylim[0]:ylim[1]].values, rows_labels = xlabel, 
-            cols_labels = ylabel, rows_title = "Pair $(v_1,t_1)$", cols_title = "Pair $(v_2,t_2)$", 
-            title = "Window spectogram Euclidian distance", colorbar = True, file_name = image_save)
+    if vlist is not None:
+        vert_list = ["({},{})".format(i,j) for i in vlist for j in range(joint_spectogram.shape[1] - tw)]
+        dist_matrix = dist_matrix.loc[vert_list, vert_list]
+    xlabel = "" if xlim is None or (xlim[1] - xlim[0]) > 150 else ["$p_{"+x+"}$" for x in dist_matrix.columns[xlim[0]:xlim[1]]]
+    ylabel = "" if xlim is None or (ylim[1] - ylim[0]) > 150 else ["$p_{"+x+"}$" for x in dist_matrix.index[xlim[0]:xlim[1]]]
+    if xlabel == "" and len(dist_matrix.columns) <= 150: xlabel = ["$p_{"+x+"}$" for x in dist_matrix.columns]
+    if ylabel == "" and len(dist_matrix.index) <= 150: ylabel = ["$p_{"+x+"}$" for x in dist_matrix.index]
+    if xlim is None: xlim = [None, None]
+    if ylim is None: ylim = [None, None]
+    plot_matrix(dist_matrix.iloc[xlim[0]:xlim[1],ylim[0]:ylim[1]].values, rows_labels = xlabel, 
+        cols_labels = ylabel, rows_title = "Pair $(v_1,t_1)$", cols_title = "Pair $(v_2,t_2)$", 
+        title = "Window spectogram Euclidian distance", colorbar = True, file_name = image_save)
     print("[{}][INFO] Final matrix computation.".format(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")))
     return dist_matrix
 
