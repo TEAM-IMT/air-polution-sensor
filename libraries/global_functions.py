@@ -96,6 +96,7 @@ def plot_curves (xs, ys, legends=[], xlabel="", ylabel="", title="", file_name=N
     
     # Plot
     figure = pyplot.figure(figsize=(20, 10))
+    figure.patch.set_facecolor('white')
     for i in range(len(ys)) :
         actual_legend = "" if len(legends) == 0 else legends[i]
         pyplot.plot(xs[i], ys[i], label=actual_legend)
@@ -112,7 +113,7 @@ def plot_curves (xs, ys, legends=[], xlabel="", ylabel="", title="", file_name=N
     # Save
     if file_name is not None :
         create_directory_for(file_name)
-        figure.savefig(file_name, bbox_inches="tight")
+        figure.savefig(file_name, bbox_inches="tight", facecolor = 'white')
         
 #############################################################################################################################
 
@@ -158,7 +159,7 @@ def plot_stem (values, xticks="", ylabel="", title="", file_name=None, x_lim = N
         
     # Plot
     figure = pyplot.figure(figsize=(20, 10))
-
+    figure.patch.set_facecolor('white')
     if x_lim is not None: 
         values = values[x_lim[0]:x_lim[1]]
         
@@ -173,7 +174,7 @@ def plot_stem (values, xticks="", ylabel="", title="", file_name=None, x_lim = N
     # Save
     if file_name is not None :
         create_directory_for(file_name)
-        figure.savefig(file_name, bbox_inches="tight")
+        figure.savefig(file_name, bbox_inches="tight", facecolor = 'white')
 
 #############################################################################################################################
 
@@ -199,6 +200,7 @@ def plot_matrix (matrix, rows_labels="", cols_labels="", rows_title="", cols_tit
     if interpolate: interp = 'hanning'
     else: interp = None
     figure, axis = pyplot.subplots(figsize=(20, 20))
+    figure.patch.set_facecolor('white')
     if limits is None: cax = axis.matshow(matrix, interpolation = interp)
     else: cax = axis.matshow(matrix, vmin = limits[0], vmax = limits[1], interpolation = interp)
     
@@ -227,12 +229,12 @@ def plot_matrix (matrix, rows_labels="", cols_labels="", rows_title="", cols_tit
         divider = make_axes_locatable(axis).append_axes("right", size="5%", pad=0.1)
         pyplot.colorbar(cax, cax = divider)
     
-    pyplot.show()
-    
     # Save
     if file_name is not None :
         create_directory_for(file_name)
-        figure.savefig(file_name, bbox_inches="tight")
+        figure.savefig(file_name, bbox_inches="tight", facecolor = 'white')
+
+    pyplot.show()
 
 #############################################################################################################################
 
@@ -253,6 +255,7 @@ def plot_graph (graph, signal=None, title="", file_name=None, limits = None, **k
     
     # With or without signal
     figure = pyplot.figure(figsize=(20, 10))
+    figure.patch.set_facecolor('white')
     if signal is None:
         if limits is None: graph.plot(ax=figure.gca(), **kwargs)
         else: graph.plot(ax=figure.gca(), limits = limits, **kwargs)
@@ -270,7 +273,7 @@ def plot_graph (graph, signal=None, title="", file_name=None, limits = None, **k
     # Save
     if file_name is not None :
         create_directory_for(file_name)
-        figure.savefig(file_name)
+        figure.savefig(file_name, bbox_inches="tight", facecolor = 'white')
 
 #############################################################################################################################
 
@@ -299,6 +302,7 @@ def plot_distribution (values, min_x=None, max_x=None, nb_bins=100, xlabel="", f
     
     # Plot histogram
     figure = pyplot.figure(figsize=(20, 10))
+    figure.patch.set_facecolor('white')
     pyplot.bar(bins[:-1], probas, width=(bins[1] - bins[0]), align="edge")
     pyplot.xlabel(xlabel)
     pyplot.ylabel("%")
@@ -310,7 +314,7 @@ def plot_distribution (values, min_x=None, max_x=None, nb_bins=100, xlabel="", f
     # Save
     if file_name is not None :
         create_directory_for(file_name)
-        figure.savefig(file_name)
+        figure.savefig(file_name, bbox_inches="tight", facecolor = 'white')
 
 #############################################################################################################################
 ############################################# Graph signal processing functions #############################################
