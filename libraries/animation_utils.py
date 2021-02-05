@@ -288,7 +288,7 @@ Out:
 
 def dist_matrix_estimation(joint_spectogram, sw, tw, filename = None, overwrite = False, cprint = 100000):
     dist_matrix = pd.DataFrame()
-    count, S, T = 0, *joint_spectogram.shape[:2]
+    count, S, T = 0, *joint_spectogram.shape[2:]
     N = S*T
     joint_spectogram = numpy.pad(joint_spectogram, ((0,0),(0,0),(sw,sw),(tw,tw))) # Add zero-pad
     if filename is not None and os.path.isfile(filename) and not overwrite:
