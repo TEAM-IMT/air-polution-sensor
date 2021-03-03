@@ -73,7 +73,6 @@ Out:
 """
 def gft_signal_anima(graph, signal, is_graph_space = True, x_lim = None, GFT= None):
     def update(value):
-
         if GFT is None or not GFT :
             plot_stem(graph.igft(graph.gft(signal[value])), 
                     xticks = range(graph.N), ylabel = "Signal", title = title1 + str(value))
@@ -159,6 +158,45 @@ def spectogram_anima(graph, signal, kernel = None, SKS = 30, is_graph_space = Fa
             description = desc, disabled=False, style = {"handle_color":"lightblue"},)}
     spectrogram, pr_value = None, None
     return ipywidgets.widgets.interact(update, **params)    
+
+#############################################################################################################################
+"""
+Show localization kernel signal in space - graph.
+--
+In:
+    * space_time_graph: List of two PyGSP graph: space(0) and time(1) graphs, in this order.
+    * center: (vertex, instant) coordinates to localizate kernels
+    * windows_kernels: List of Space Kernel Scale (SKS) and Time Kernel Scale (TKS) values, in this order. Optional.
+    * kernels: Listo of PyGSP heat kernels, one for space-graph (0) and the other for time-space (1), in this order. Optional.
+Out:
+    * Interactif ipywidgets
+"""
+def kernel_anima(space_time_graph, locations, windows_kernels = None, kernels = None):
+    def update(instant, autoadj = False, animaton = False):
+        if not animaton:
+            window_signal = signal[:,instant]
+            params = {}
+            if autoadj: params["limits"] = [numpy.min(window_signal), numpy.max(window_signal)]
+            else: params["limits"] = [numpy.min(signal), numpy.max(signal)]
+            params['title'] = "Graph with signal at (v = {}, t = {})".format(*locations) + " location and instant " + str(instant)
+            plot_graph(space_time_graph[0], window_signal, **params)
+        else:
+            for i in range(space_time_graph[1].N):
+                update(i); clear_output(wait = True)
+            animation = False
+    
+    # Slider
+    if windows_kernels is not None:
+        kernels = create_joint_heat_kernel(space_time_graph, windows_kernels, normalize = True)
+    if kernels is None:
+        print("[ERROR] Kernels don't valid. Please check.")
+        return None
+
+    # Signal estimation
+    signal = localize_joint_heat_kernel(space_time_graph, kernels, locations)
+
+    params = {"instant": range(space_time_graph[1].N)}
+    return ipywidgets.widgets.interact(update, **params)
 
 #############################################################################################################################
 """

@@ -15,7 +15,8 @@ import pyprof2calltree
 import scipy.signal
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 matplotlib.rcParams.update({'font.size': 14.0, 'figure.titlesize':18.0, 'axes.labelsize':16.0, 'xtick.labelsize': 14.0,
-                            'ytick.labelsize': 14.0, 'axes.titlesize':18.0, 'image.cmap':'viridis'})
+                            'ytick.labelsize': 14.0, 'axes.titlesize':18.0, 'image.cmap':'viridis', 'text.color': 'black',
+                            'axes.labelcolor': 'black', 'xtick.color': 'black', 'ytick.color': 'black'})
 
 #############################################################################################################################
 ###################################################### Utlity functions #####################################################
@@ -169,6 +170,7 @@ def plot_stem (values, xticks="", ylabel="", title="", file_name=None, x_lim = N
     pyplot.title(title)
     figure.gca().set_frame_on(False)
     pyplot.tight_layout()
+    pyplot.grid(True, linewidth = 0.2)
     pyplot.show()
     
     # Save
@@ -466,6 +468,7 @@ def compute_graph_spectrogram (graph, signal, window_kernel) :
     spectrogram = numpy.zeros((graph.N, graph.N))
     for i in range(graph.N) :
         window = window_kernel.localize(i)
+        # print(window)
         windowed_signal = window * signal
         spectrogram[:, i] = graph.gft(windowed_signal) ** 2
     return spectrogram
@@ -597,7 +600,33 @@ def compute_joint_graph_spectrogram(graphs, signal, window_kernels, normalize = 
 
 def Norm_W(W,Theta,k):
     W_normal = numpy.exp(-(W**2/(2*Theta**2)))
-    W_normal = W_normal.replace([1],0)
     column = W_normal.columns.to_list()
     W_normal[column] = W_normal[column].where(~(W[column]>k),other=0)
     return W_normal
+
+#############################################################################################################################
+
+"""
+    Modify adjoining matrix to maintain a maximum of k neighbors per vertex.
+    --
+    In:
+        * S: Adjacent normalized matrix ( 0 - 1 )
+        * n_neigh : Number of neighbors
+    Out:
+        * A: Matrix with k neighbors per vertex
+"""
+
+
+def Neighboors(S, n_neigh ):
+  N = len(S)
+  if n_neigh >=  N :
+    A = S
+  else :
+    A = numpy.zeros((N,N))
+    for i in range(N):
+      Best_simil = -numpy.sort(-S[i])[0:n_neigh]
+      for m in Best_simil :
+        j = numpy.where(S[i,] == m)
+        A[i,j] = S[i,j]
+        A[j,i] = S[i,j]
+  return A
