@@ -118,16 +118,15 @@ Out:
 """
 def spectogram_anima(graph, signal, kernel = None, SKS = 30, is_graph_space = False, lamdba_lim = None, **kwargs):
     def update(value, autoadj = False, interpolate = True):
-        nonlocal kwargs, spectrogram, pr_value
+        nonlocal kwargs
+        # Space-spectogram
+        spectrogram = spectrograms[value]
+
         kwargs_save = copy.deepcopy(kwargs)
         if autoadj: kwargs["limits"] = None
+        elif "limits" not in kwargs.keys(): kwargs["limits"] = [numpy.min(spectrograms), numpy.max(spectrograms)]
         kwargs["interpolate"] = interpolate
-
-        # Space-spectogram
-        if pr_value is None: pr_value = value
-        if spectrogram is None or pr_value != value:
-            spectrogram = compute_graph_spectrogram(graph, signal[:, value], kernel)
-            pr_value = value
+        
         if lamdba_lim is not None: 
             plot_matrix(spectrogram[lamdba_lim[0]:lamdba_lim[1]], cols_title=cols_title, cols_labels=range(graph.N),
                     rows_title="Eigenvalue index", colorbar=True, rows_labels=rows_labels[lamdba_lim[0]:lamdba_lim[1]], 
@@ -152,11 +151,12 @@ def spectogram_anima(graph, signal, kernel = None, SKS = 30, is_graph_space = Fa
         desc = "Vertex"
 
     if kernel is None or SKS is not None: kernel = create_heat_kernel (graph, SKS)
+    spectrograms = []
+    for value in range(signal.shape[1]): spectrograms.append(compute_graph_spectrogram(graph, signal[:,value], kernel))
     # params = {"value": ipywidgets.IntSlider(min = 0, max = signal.shape[1], step = 1, 
     #     layout = ipywidgets.Layout(width='auto'), style = {"handle_color":"lightblue"}, description = desc)}
     params = {"value": ipywidgets.Dropdown(options = range(signal.shape[1]), value = 0, 
             description = desc, disabled=False, style = {"handle_color":"lightblue"},)}
-    spectrogram, pr_value = None, None
     return ipywidgets.widgets.interact(update, **params)    
 
 #############################################################################################################################
