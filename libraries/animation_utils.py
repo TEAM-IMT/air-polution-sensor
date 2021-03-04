@@ -118,16 +118,15 @@ Out:
 """
 def spectogram_anima(graph, signal, kernel = None, SKS = 30, is_graph_space = False, lamdba_lim = None, **kwargs):
     def update(value, autoadj = False, interpolate = True):
-        nonlocal kwargs, spectrogram, pr_value
+        nonlocal kwargs
+        # Space-spectogram
+        spectrogram = spectrograms[value]
+
         kwargs_save = copy.deepcopy(kwargs)
         if autoadj: kwargs["limits"] = None
+        elif "limits" not in kwargs.keys(): kwargs["limits"] = [numpy.min(spectrograms), numpy.max(spectrograms)]
         kwargs["interpolate"] = interpolate
-
-        # Space-spectogram
-        if pr_value is None: pr_value = value
-        if spectrogram is None or pr_value != value:
-            spectrogram = compute_graph_spectrogram(graph, signal[:, value], kernel)
-            pr_value = value
+        
         if lamdba_lim is not None: 
             plot_matrix(spectrogram[lamdba_lim[0]:lamdba_lim[1]], cols_title=cols_title, cols_labels=range(graph.N),
                     rows_title="Eigenvalue index", colorbar=True, rows_labels=rows_labels[lamdba_lim[0]:lamdba_lim[1]], 
@@ -151,12 +150,13 @@ def spectogram_anima(graph, signal, kernel = None, SKS = 30, is_graph_space = Fa
         signal = signal.T
         desc = "Vertex"
 
-    if kernel is None or SKS is not None: kernel = create_heat_kernel (graph, SKS)
+    if kernel is None or SKS is not None: kernel = create_heat_kernel(graph, SKS, normalize = True)
+    spectrograms = []
+    for value in range(signal.shape[1]): spectrograms.append(compute_graph_spectrogram(graph, signal[:,value], kernel))
     # params = {"value": ipywidgets.IntSlider(min = 0, max = signal.shape[1], step = 1, 
     #     layout = ipywidgets.Layout(width='auto'), style = {"handle_color":"lightblue"}, description = desc)}
     params = {"value": ipywidgets.Dropdown(options = range(signal.shape[1]), value = 0, 
             description = desc, disabled=False, style = {"handle_color":"lightblue"},)}
-    spectrogram, pr_value = None, None
     return ipywidgets.widgets.interact(update, **params)    
 
 #############################################################################################################################
@@ -247,7 +247,7 @@ def JFT_anima(space_time_graph, signal, windows_kernels = None, kernels = None, 
         kernels = create_joint_heat_kernel(space_time_graph, windows_kernels)
     if kernels is not None:
         if joint_spectogram is None:
-            joint_spectogram = compute_joint_graph_spectrogram(space_time_graph, signal, kernels)
+            joint_spectogram = compute_joint_graph_spectrogram(space_time_graph, signal, kernels, normalize = True)
     else:
         print("[ERROR] Kernels don't valid. Please check.")
         return kernels, joint_spectogram
@@ -324,10 +324,12 @@ Out:
     * image plot
 """
 
-def dist_matrix_estimation(joint_spectogram, sw, tw, filename = None, overwrite = False, vlist = None, cprint = 100000):
+def dist_matrix_estimation(joint_spectogram, sw, tw, filename = None, overwrite = False, vlist = None, norm_each_sg = False, cprint = 100000):
     dist_matrix = pd.DataFrame()
     count, S, T = 0, *joint_spectogram.shape[2:]
     N = S*T
+    if norm_each_sg: joint_spectogram /= numpy.max(joint_spectogram, axis = (0,1)) # Change all values from 0 to 1
+
     joint_spectogram = numpy.pad(joint_spectogram, ((0,0),(0,0),(sw,sw),(tw,tw))) # Add zero-pad
     if filename is not None and os.path.isfile(filename) and not overwrite:
         dist_matrix = pd.read_csv(filename, index_col = 0)
@@ -353,9 +355,9 @@ def dist_matrix_estimation(joint_spectogram, sw, tw, filename = None, overwrite 
     return dist_matrix
 
 def plot_dist_matrix(joint_spectogram, sw, tw, vlist = None, xlim = None, ylim = None, filename = None, 
-                    overwrite = False, image_save = None, npair = 200):
+                    overwrite = False, image_save = None, npair = 200, norm_each_sg = False):
     print("[{}][INFO] Start matrix computation.".format(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")))
-    dist_matrix = dist_matrix_estimation(joint_spectogram, sw, tw, filename = filename, overwrite = overwrite, vlist = vlist)
+    dist_matrix = dist_matrix_estimation(joint_spectogram, sw, tw, filename = filename, overwrite = overwrite, vlist = vlist, norm_each_sg = norm_each_sg)
     print("[{}][INFO] Start matrix graph.".format(datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")))
     xlabel = "" if xlim is None or (xlim[1] - xlim[0]) > npair else ["$p_{"+x+"}$" for x in dist_matrix.columns[xlim[0]:xlim[1]]]
     ylabel = "" if xlim is None or (ylim[1] - ylim[0]) > npair else ["$p_{"+x+"}$" for x in dist_matrix.index[xlim[0]:xlim[1]]]

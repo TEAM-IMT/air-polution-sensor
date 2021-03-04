@@ -443,10 +443,10 @@ def get_neighbors (graph, vertex) :
         * kernel: PyGSP heat kernel.
 """
 
-def create_heat_kernel (graph, scale) :
+def create_heat_kernel (graph, scale, normalize = True) :
 
     # PyGSP kernel
-    kernel = pygsp.filters.Heat(graph, scale, normalize=True)
+    kernel = pygsp.filters.Heat(graph, scale, normalize = normalize)
     return kernel
 
 #############################################################################################################################
@@ -581,8 +581,7 @@ def compute_joint_graph_spectrogram(graphs, signal, window_kernels, normalize = 
             window = localize_joint_heat_kernel(graphs, window_kernels, [i,j], normalize = False)
             windowed_signal = window * signal
             spectrogram[:, :, i, j] = compute_jft(graphs, windowed_signal)**2
-    norm = numpy.linalg.norm(spectrogram)
-    if numpy.abs(norm) > 1e-6 and normalize: spectrogram /= norm
+    if normalize: spectrogram /= numpy.linalg.norm(spectrogram)
     return spectrogram
 
 #############################################################################################################################
