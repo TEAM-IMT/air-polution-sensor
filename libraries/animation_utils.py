@@ -330,7 +330,7 @@ def dist_matrix_estimation(joint_spectogram, sw, tw, filename = None, overwrite 
     N = S*T
     if norm_each_sg: joint_spectogram /= numpy.max(joint_spectogram, axis = (0,1)) # Change all values from 0 to 1
 
-    joint_spectogram = numpy.pad(joint_spectogram, ((0,0),(0,0),(sw,sw),(tw,tw))) # Add zero-pad
+    joint_spectogram = numpy.pad(joint_spectogram, ((0,0),(0,0),(sw,sw),(tw,tw)),mode = "constant") # Add zero-pad
     if filename is not None and os.path.isfile(filename) and not overwrite:
         dist_matrix = pd.read_csv(filename, index_col = 0)
         # return numpy.loadtxt(filename, delimiter = ',')
