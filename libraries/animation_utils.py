@@ -74,23 +74,24 @@ Out:
 def gft_signal_anima(graph, signal, is_graph_space = True, x_lim = None, GFT= None):
     def update(value):
         if GFT is None or not GFT :
-            plot_stem(graph.igft(graph.gft(signal[value])), 
-                    xticks = range(graph.N), ylabel = "Signal", title = title1 + str(value))
+            prefix = "$v" if is_graph_space else "$t"
+            plot_stem(graph.igft(graph.gft(signal[value])), xticks = [prefix + "_{" + str(x) + "}$" for x in range(graph.N)], 
+                    ylabel = "Signal", title = title1 + str(value))
         if GFT is None or GFT :
             plot_stem(graph.gft(signal[value]), xticks = gft_xticks, ylabel="GFT", 
                     title = title2 + str(value),x_lim=x_lim)
     
     if is_graph_space:
-        title1 = "Signal evolution at vertex "
-        gft_xticks = ["$\lambda^T_{" + str(x) + "}$" for x in range(graph.N)]
-        title2 = "Graph Fourier Transform (GFT) of vertex "
-        description = "Vertex"
-    else: # Time representation
         title1 = "Signal evolution at instance "
         gft_xticks = ["$\lambda^G_{" + str(x) + "}$" for x in range(graph.N)]
         title2 = "Graph Fourier Transform (GFT) at instance "
         description = "Instant"
         signal = signal.T
+    else: # Time representation
+        title1 = "Signal evolution at vertex "
+        gft_xticks = ["$\lambda^T_{" + str(x) + "}$" for x in range(graph.N)]
+        title2 = "Graph Fourier Transform (GFT) of vertex "
+        description = "Vertex"
 
     if x_lim is not None:
         gft_xticks = gft_xticks[x_lim[0]:x_lim[1]]
@@ -140,7 +141,7 @@ def spectogram_anima(graph, signal, kernel = None, SKS = 30, is_graph_space = Fa
     # Slider
     if is_graph_space:
         cols_title = "Vertex"
-        rows_labels = ["$\lambda^G_{" + str(x) + "}$" for x in range(graph.N)]
+        rows_labels = [r"$\lambda^G_{" + str(x) + "}$" for x in range(graph.N)]
         title = "Spatial-graph spectrogram of all values observed at time "
         desc = "Instant"
     else: # Time representation
@@ -330,7 +331,7 @@ def dist_matrix_estimation(joint_spectogram, sw, tw, filename = None, overwrite 
     N = S*T
     if norm_each_sg: joint_spectogram /= numpy.max(joint_spectogram, axis = (0,1)) # Change all values from 0 to 1
 
-    joint_spectogram = numpy.pad(joint_spectogram, ((0,0),(0,0),(sw,sw),(tw,tw))) # Add zero-pad
+    joint_spectogram = numpy.pad(joint_spectogram, ((0,0),(0,0),(sw,sw),(tw,tw)), mode = 'constant') # Add zero-pad
     if filename is not None and os.path.isfile(filename) and not overwrite:
         dist_matrix = pd.read_csv(filename, index_col = 0)
         # return numpy.loadtxt(filename, delimiter = ',')

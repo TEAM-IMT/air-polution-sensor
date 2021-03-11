@@ -585,6 +585,8 @@ def compute_joint_graph_spectrogram(graphs, signal, window_kernels, normalize = 
     return spectrogram
 
 #############################################################################################################################
+################################################### Complement functions ####################################################
+#############################################################################################################################
 
 """
     Computes the normalization with the thresholded Gaussian kernel weighting function
@@ -615,17 +617,73 @@ def Norm_W(W,Theta,k):
         * A: Matrix with k neighbors per vertex
 """
 
-
 def Neighboors(S, n_neigh ):
-  N = len(S)
-  if n_neigh >=  N :
-    A = S
-  else :
-    A = numpy.zeros((N,N))
-    for i in range(N):
-      Best_simil = -numpy.sort(-S[i])[0:n_neigh]
-      for m in Best_simil :
-        j = numpy.where(S[i,] == m)
-        A[i,j] = S[i,j]
-        A[j,i] = S[i,j]
-  return A
+    N = len(S)
+    if n_neigh >=  N : 
+        A = S
+    else :
+        A = numpy.zeros((N,N))
+        for i in range(N):
+            Best_simil = -numpy.sort(-S[i])[0:n_neigh]
+            for m in Best_simil :
+                j = numpy.where(S[i,] == m)
+                A[i,j] = S[i,j]
+                A[j,i] = S[i,j]
+    return A
+
+#############################################################################################################################
+
+"""
+    Create a brownian motion in one signal inside a signals-matrix: X(t + dt) = X(t) + N(0, delta**2 * dt; t, t+dt)
+    For more info: https://scipy-cookbook.readthedocs.io/items/BrownianMotion.html
+    --
+    In:
+        * x0: Initial value or numpy array with intial values
+        * n: Steps number
+        * delta: "Speed" of Wiener process. delta**2*t is the variance in normal distribution
+        * dt: Time step
+        * out: Array to save the results
+    Out:
+        * A: Matrix with original signals and brownian motion
+"""
+
+def brownian(x0, n, delta, dt = 1, out = None):
+    x0 = numpy.asarray(x0)
+    r = numpy.random.normal(0.0, delta, x0.shape + (n,))*numpy.sqrt(dt)
+    if out is None: out = numpy.empty(r.shape)
+    numpy.cumsum(r, axis=-1, out = out)
+    out += numpy.expand_dims(x0, axis=-1)
+    return out
+
+#############################################################################################################################
+
+"""
+    Create a set of signals according to space-temporal graphs eigenvectors.
+    --
+    In:
+        * graphs: PyGSP graphs in a list, in order.
+        * sgropus: List of numbers of the desired eigenvectors in spatial graph, for each vertex. By default is choosing one randomly.
+        * tgropus: List of numbers of the desired eigenvectors in temporal graph, for each instant. By default is choosing one randomly.
+        * ln: Level noisy
+        * normalize: Apply (or not) time_series /= numpy.linalg.norm(time_series)
+    Out:
+        * time_series: Signal matrix in time-space domains.
+"""
+
+def eigen_signal(graph, groups = None):
+    N = graph.N
+    groups = numpy.array(groups)
+    if groups is None or len(groups) != N: # Time and space offset same-frequency sinusoidals
+        if hasattr(groups, "__iter__"): groups = groups[0]
+        if groups is not None: print("[WARNING] len(groups) != graph.N. Groups ignored.")
+        if groups is None: groups = numpy.random.choice(range(N))
+        signal = graph.U[:,groups]
+    else:
+        signal = numpy.array([graph.U[i, int(groups[i])] for i in range(N)])
+    return signal[:,None] # signal with shape (N,1)
+
+def time_space_signal_gen(graphs, sgroups = None, tgroups = None, ln = 0.0, normalize = True):
+    time_series = eigen_signal(graphs[0], sgroups) * eigen_signal(graphs[1], tgroups).T # (V,1) X (1,T) => (V,T)
+    if normalize: time_series /= numpy.linalg.norm(time_series) # Signals normalize
+    time_series += ln * numpy.random.randn(*time_series.shape) # Add noise
+    return time_series
