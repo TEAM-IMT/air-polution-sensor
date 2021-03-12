@@ -121,7 +121,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## Contact
 {:refdef: style="width: 10px; height: 10px"}
 * Johan Mejia (johan-steven.mejia-mogollon@imt-atlantique.net) - [<img src=linkedin-shield width="10">][linkedin-url-1]
-* Tatiana Moreno (jenny-tatiana.moreno-perea@imt-atlantique.net) - [![LinkedIn][linkedin-shield]{: refdef}][linkedin-url-2]
+* Tatiana Moreno (jenny-tatiana.moreno-perea@imt-atlantique.net) - [(![LinkedIn][linkedin-shield]){: refdef}][linkedin-url-2]
 * Diego Carreño (diego-andres.carreno-avila@imt-atlantique.net) - [![LinkedIn][linkedin-shield]][linkedin-url-3]
 * Ilias Amal (ilias.amal@imt-atlantique.net) - [![LinkedIn][linkedin-shield]][linkedin-url-4]
 * Project Link: [https://github.com/Johansmm/air-polution-sensor](https://github.com/Johansmm/air-polution-sensor)
