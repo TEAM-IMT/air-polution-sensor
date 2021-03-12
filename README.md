@@ -144,7 +144,10 @@ We also thank [Best-README-Template](https://github.com/othneildrew/Best-README-
 [issues-url]: https://github.com/Johansmm/air-polution-sensor/issues
 [license-shield]: https://img.shields.io/github/license/github_username/repo.svg?style=for-the-badge
 [license-url]: https://github.com/Johansmm/air-polution-sensor/blob/main/LICENSE
-[linkedin-shield]: https://www.flaticon.com/svg/vstatic/svg/174/174857.svg?token=exp=1615539079~hmac=9768ff7f457679c402c4419a6e7befd6
+[linkedin-shield]: <img src="https://www.flaticon.com/svg/vstatic/svg/174/174857.svg?token=exp=1615539079~hmac=9768ff7f457679c402c4419a6e7befd6" width="10" height="10"/>
+
+
+
 [linkedin-url-1]: https://www.linkedin.com/in/johansmm/
 [linkedin-url-2]: https://www.linkedin.com/in/tatiana-moreno-perea/
 [linkedin-url-3]: https://www.linkedin.com/in/diego-andres-carre%C3%B1o-49b2ab157/
