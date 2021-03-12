@@ -83,7 +83,7 @@ sudo apt-get install python3-dev graphviz libgraphviz-dev pkg-config
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/daca1897/Age-Detection-Actors-Challenge.git
+   git clone https://github.com/Johansmm/air-polution-sensor
    ```
 2. Install requerements
    ```sh
