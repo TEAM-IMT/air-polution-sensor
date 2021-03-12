@@ -13,10 +13,10 @@
     <img src="https://github.com/Johansmm/air-polution-sensor/blob/main/results/signal_travel.gif" alt="Logo" width="720" height="480">
   </a>
 
-  <h3 align="center">project_title</h3>
+  <h3 align="center">Analyse spatio-temporelle de signaux pour détecter la dérivede capteurs mesurant la qualité de l’air</h3>
 
   <p align="center">
-    Code solution of project: Analyse spatio-temporelle de signaux pour détecter la dérivede capteurs mesurant la qualité de l’air
+    Detection of drift concept in a sensor network from the Graph Fourier Transform (GFT).
     <br />
     <a href="https://github.com/Johansmm/air-polution-sensor"><strong>Explore the docs »</strong></a>
     <br />
