@@ -120,10 +120,10 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 {:refdef: style="width: 10px; height: 10px"}
-* Johan Mejia (johan-steven.mejia-mogollon@imt-atlantique.net) - [<img src=![LinkedIn][linkedin-shield] width="15">][linkedin-url-1]
-* Tatiana Moreno (jenny-tatiana.moreno-perea@imt-atlantique.net) - [![LinkedIn][linkedin-shield]{height=400px width=500px}][linkedin-url-2]
-* Diego Carreño (diego-andres.carreno-avila@imt-atlantique.net) - [![LinkedIn][linkedin-shield]][linkedin-url-3]
-* Ilias Amal (ilias.amal@imt-atlantique.net) - [![LinkedIn][linkedin-shield]][linkedin-url-4]
+* Johan Mejia (johan-steven.mejia-mogollon@imt-atlantique.net) - [<img src="https://www.flaticon.com/svg/vstatic/svg/174/174857.svg?token=exp=1615539079~hmac=9768ff7f457679c402c4419a6e7befd6" width="15">][linkedin-url-1]
+* Tatiana Moreno (jenny-tatiana.moreno-perea@imt-atlantique.net) - [<img src="https://www.flaticon.com/svg/vstatic/svg/174/174857.svg?token=exp=1615539079~hmac=9768ff7f457679c402c4419a6e7befd6" width="15">][linkedin-url-2]
+* Diego Carreño (diego-andres.carreno-avila@imt-atlantique.net) - [<img src="https://www.flaticon.com/svg/vstatic/svg/174/174857.svg?token=exp=1615539079~hmac=9768ff7f457679c402c4419a6e7befd6" width="15">][linkedin-url-3]
+* Ilias Amal (ilias.amal@imt-atlantique.net) - [<img src="https://www.flaticon.com/svg/vstatic/svg/174/174857.svg?token=exp=1615539079~hmac=9768ff7f457679c402c4419a6e7befd6" width="15">][linkedin-url-4]
 * Project Link: [https://github.com/Johansmm/air-polution-sensor](https://github.com/Johansmm/air-polution-sensor)
 
 <!-- ACKNOWLEDGEMENTS -->
