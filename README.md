@@ -119,10 +119,10 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
 ## Contact
-* Johan Mejia - ![https://www.linkedin.com/in/johansmm/][linkedin-shield] - johan-steven.mejia-mogollon@imt-atlantique.net
-* Tatiana Moreno - [![LinkedIn][linkedin-shield]][https://www.linkedin.com/in/tatiana-moreno-perea/] - jenny-tatiana.moreno-perea@imt-atlantique.net
-* Diego Carreño - [![LinkedIn][linkedin-shield]][https://www.linkedin.com/in/diego-andres-carre%C3%B1o-49b2ab157/] - diego-andres.carreno-avila@imt-atlantique.net
-* Ilias Amal - [![LinkedIn][linkedin-shield]][https://www.linkedin.com/in/ilias-amal-455502183/] - ilias.amal@imt-atlantique.net
+* Johan Mejia - [![LinkedIn][linkedin-shield]][linkedin-url-1] - [![Email][email-shield]][email-url-1]
+* Tatiana Moreno - [![LinkedIn][linkedin-shield]][linkedin-url-1] - jenny-tatiana.moreno-perea@imt-atlantique.net
+* Diego Carreño - [![LinkedIn][linkedin-shield]][linkedin-url-1] - diego-andres.carreno-avila@imt-atlantique.net
+* Ilias Amal - [![LinkedIn][linkedin-shield]][linkedin-url-1] - ilias.amal@imt-atlantique.net
 * Project Link: [https://github.com/Johansmm/air-polution-sensor](https://github.com/Johansmm/air-polution-sensor)
 
 <!-- ACKNOWLEDGEMENTS -->
@@ -143,5 +143,13 @@ We also thank [Best-README-Template](https://github.com/othneildrew/Best-README-
 [issues-url]: https://github.com/Johansmm/air-polution-sensor/issues
 [license-shield]: https://img.shields.io/github/license/github_username/repo.svg?style=for-the-badge
 [license-url]: https://github.com/Johansmm/air-polution-sensor/blob/main/LICENSE
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/github_username
+[linkedin-shield]: https://www.flaticon.com/svg/vstatic/svg/174/174857.svg?token=exp=1615539079~hmac=9768ff7f457679c402c4419a6e7befd6
+[linkedin-url-1]: https://www.linkedin.com/in/johansmm/
+[linkedin-url-2]: https://www.linkedin.com/in/tatiana-moreno-perea/
+[linkedin-url-3]: https://www.linkedin.com/in/diego-andres-carre%C3%B1o-49b2ab157/
+[linkedin-url-4]: https://www.linkedin.com/in/ilias-amal-455502183/
+[email-shield]: https://i.pinimg.com/originals/8f/c3/7b/8fc37b74b608a622588fbaa361485f32.png
+[email-url-1]: johan-steven.mejia-mogollon@imt-atlantique.net
+[email-url-2]: https://www.linkedin.com/in/tatiana-moreno-perea/
+[email-url-3]: https://www.linkedin.com/in/diego-andres-carre%C3%B1o-49b2ab157/
+[email-url-4]: https://www.linkedin.com/in/ilias-amal-455502183/
