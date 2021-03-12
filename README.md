@@ -152,4 +152,4 @@ We also thank [Best-README-Template](https://github.com/othneildrew/Best-README-
 [linkedin-url-4]: https://www.linkedin.com/in/ilias-amal-455502183/
 
 @linkedin-shield https://www.flaticon.com/svg/vstatic/svg/174/174857.svg?token=exp=1615539079~hmac=9768ff7f457679c402c4419a6e7befd6
-@linkedin-shield
+[@linkedin-shield]
