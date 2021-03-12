@@ -119,10 +119,10 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
 ## Contact
-* Johan Mejia - [![LinkedIn][linkedin-shield]][linkedin-url-1] - [![Email][email-shield]][email-url-1]
-* Tatiana Moreno - [![LinkedIn][linkedin-shield]][linkedin-url-1] - jenny-tatiana.moreno-perea@imt-atlantique.net
-* Diego Carreño - [![LinkedIn][linkedin-shield]][linkedin-url-1] - diego-andres.carreno-avila@imt-atlantique.net
-* Ilias Amal - [![LinkedIn][linkedin-shield]][linkedin-url-1] - ilias.amal@imt-atlantique.net
+* Johan Mejia (johan-steven.mejia-mogollon@imt-atlantique.net) - [![LinkedIn][linkedin-shield | width = 10]][linkedin-url-1]
+* Tatiana Moreno (jenny-tatiana.moreno-perea@imt-atlantique.net) - [![LinkedIn][linkedin-shield | width = 10]][linkedin-url-1]
+* Diego Carreño (diego-andres.carreno-avila@imt-atlantique.net) - [![LinkedIn][linkedin-shield | width = 10]][linkedin-url-1]
+* Ilias Amal (ilias.amal@imt-atlantique.net) - [![LinkedIn][linkedin-shield | width = 10]][linkedin-url-1]
 * Project Link: [https://github.com/Johansmm/air-polution-sensor](https://github.com/Johansmm/air-polution-sensor)
 
 <!-- ACKNOWLEDGEMENTS -->
@@ -148,8 +148,3 @@ We also thank [Best-README-Template](https://github.com/othneildrew/Best-README-
 [linkedin-url-2]: https://www.linkedin.com/in/tatiana-moreno-perea/
 [linkedin-url-3]: https://www.linkedin.com/in/diego-andres-carre%C3%B1o-49b2ab157/
 [linkedin-url-4]: https://www.linkedin.com/in/ilias-amal-455502183/
-[email-shield]: https://i.pinimg.com/originals/8f/c3/7b/8fc37b74b608a622588fbaa361485f32.png
-[email-url-1]: johan-steven.mejia-mogollon@imt-atlantique.net
-[email-url-2]: https://www.linkedin.com/in/tatiana-moreno-perea/
-[email-url-3]: https://www.linkedin.com/in/diego-andres-carre%C3%B1o-49b2ab157/
-[email-url-4]: https://www.linkedin.com/in/ilias-amal-455502183/
