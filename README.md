@@ -119,7 +119,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
 ## Contact
-* Johan Mejia (johan-steven.mejia-mogollon@imt-atlantique.net) - [![LinkedIn][linkedin-shield]][linkedin-url-1]
+* Johan Mejia (johan-steven.mejia-mogollon@imt-atlantique.net) - [<img src=[linkedin-shield] width="10">][linkedin-url-1]
 * Tatiana Moreno (jenny-tatiana.moreno-perea@imt-atlantique.net) - [![LinkedIn][linkedin-shield]][linkedin-url-2]
 * Diego Carreño (diego-andres.carreno-avila@imt-atlantique.net) - [![LinkedIn][linkedin-shield]][linkedin-url-3]
 * Ilias Amal (ilias.amal@imt-atlantique.net) - [![LinkedIn][linkedin-shield]][linkedin-url-4]
