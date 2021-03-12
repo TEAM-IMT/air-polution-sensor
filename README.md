@@ -156,4 +156,4 @@ linkedin-shield-p=<img src="https://www.flaticon.com/svg/vstatic/svg/174/174857.
 ATTRIBUTION=Mark Wahlberg
 $-->
 
-![image|12x12][linkedin-shield]
+![image|10x10][[linkedin-shield] = 10x10]
