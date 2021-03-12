@@ -151,5 +151,5 @@ We also thank [Best-README-Template](https://github.com/othneildrew/Best-README-
 [linkedin-url-3]: https://www.linkedin.com/in/diego-andres-carre%C3%B1o-49b2ab157/
 [linkedin-url-4]: https://www.linkedin.com/in/ilias-amal-455502183/
 
-[linkedin-shield-p]: <img src="https://www.flaticon.com/svg/vstatic/svg/174/174857.svg?token=exp=1615539079~hmac=9768ff7f457679c402c4419a6e7befd6" width="15">
-[linkedin-shield-p]
+$linkedin-shield-p=<img src="https://www.flaticon.com/svg/vstatic/svg/174/174857.svg?token=exp=1615539079~hmac=9768ff7f457679c402c4419a6e7befd6" width="15">
+$linkedin-shield-p
