@@ -11,7 +11,7 @@
 <br />
 <p align = "center">
   <a href = "https://github.com/Johansmm/air-polution-sensor">
-    <img src="https://github.com/Johansmm/air-polution-sensor/blob/main/results/signal_travel.gif" alt="Logo" width="1080" height="720">
+    <img src="https://github.com/Johansmm/air-polution-sensor/blob/main/results/signal_travel.gif" alt="Logo" width="720" height="480">
   </a>
 
   <h3 align="center">project_title</h3>
@@ -119,11 +119,11 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <!-- CONTACT -->
 ## Contact
-* Johan Mejia - [![linkenid](linkedin-shield)](https://www.linkedin.com/in/johansmm/) - johan-steven.mejia-mogollon@imt-atlantique.net
-* Tatiana Moreno - [![linkenid](linkedin-shield)](https://www.linkedin.com/in/tatiana-moreno-perea/) - jenny-tatiana.moreno-perea@imt-atlantique.net
-* Diego Carreño - [![linkenid](linkedin-shield)](https://www.linkedin.com/in/diego-andres-carre%C3%B1o-49b2ab157/) - diego-andres.carreno-avila@imt-atlantique.net
-* Ilias Amal - [![linkenid](linkedin-shield)](https://www.linkedin.com/in/ilias-amal-455502183/) - ilias.amal@imt-atlantique.net
-Project Link: [https://github.com/Johansmm/air-polution-sensor](https://github.com/Johansmm/air-polution-sensor)
+* Johan Mejia - [[](linkedin-shield)](https://www.linkedin.com/in/johansmm/) - johan-steven.mejia-mogollon@imt-atlantique.net
+* Tatiana Moreno - [[](linkedin-shield)](https://www.linkedin.com/in/tatiana-moreno-perea/) - jenny-tatiana.moreno-perea@imt-atlantique.net
+* Diego Carreño - [[](linkedin-shield)](https://www.linkedin.com/in/diego-andres-carre%C3%B1o-49b2ab157/) - diego-andres.carreno-avila@imt-atlantique.net
+* Ilias Amal - [[](linkedin-shield)](https://www.linkedin.com/in/ilias-amal-455502183/) - ilias.amal@imt-atlantique.net
+* Project Link: [https://github.com/Johansmm/air-polution-sensor](https://github.com/Johansmm/air-polution-sensor)
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
