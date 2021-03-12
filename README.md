@@ -87,7 +87,7 @@ sudo apt-get install python3-dev graphviz libgraphviz-dev pkg-config
    ```
 2. Install requerements
    ```sh
-   python3 -m pip install -U requerements.
+   python3 -m pip install -U requerements   
    ```
 
 <!-- USAGE EXAMPLES -->
